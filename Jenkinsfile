@@ -9,25 +9,22 @@ pipeline {
         stage('Build') {
             agent {
                 docker {
-                    image 'node:18.20.8-alpine3.21'
+                    image 'node:18-bullseye'
                     reuseNode true
                 }
             }
             steps {
                 sh '''
-                    ls -al
-                    node --version
-                    npm --version
+                    set -e
                     npm ci
                     npm run build
-                    ls -al
                 '''
             }
         }
         stage('Test') {
             agent {
                 docker {
-                    image 'node:18.20.8-alpine3.21'
+                    image 'node:18-bullseye'
                     reuseNode true
                 }
             }
@@ -41,17 +38,18 @@ pipeline {
         stage('Deploy') {
             agent {
                 docker {
-                    image 'node:18.20.8-alpine3.21'
+                    image 'node:18-bullseye'
                     reuseNode true
                 }
             }
             steps {
                 sh '''
-                    npm install netlify-cli
-                    node_modules/.bin/netlify --version
+                    set -e
+                    npx install netlify-cli
+                    npx netlify --version
                     echo "Deploying to production Netlify site ID: $NETLIFY_SITE_ID"
-                    node_modules/.bin/netlify status
-                    node_modules/.bin/netlify deploy --dir=./build --prod
+                    npx netlify status
+                    npx netlify deploy --dir=./build --prod
                 '''
             }
         }
