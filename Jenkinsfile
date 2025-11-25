@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('w/o docker ') {
             steps {
-                echo "Without docker "
+                echo "Job without using docker "
                 sh '''
                 pwd
                 touch container-no.txt
@@ -22,7 +22,7 @@ pipeline {
             }
             
             steps {
-                echo "With using docker "
+                echo "Job wehn using docker "
                 sh '''
                     npm --version
                     pwd
