@@ -21,7 +21,9 @@ pipeline {
         }
      }
     
-    stage('Test'){
+    stage('Test') {
+        parallel {
+            stage('Unit tests'){
         agent{
                 docker{
                     image 'node:18-alpine'
@@ -33,6 +35,16 @@ pipeline {
             test -f build/index.html
             npm test
             '''
+             }
+          }    
+        }
+        stage('E2E'){
+            agent {
+                docker {
+                    image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+                    reuseNode true 
+                }
+            }
         }
     }
 
